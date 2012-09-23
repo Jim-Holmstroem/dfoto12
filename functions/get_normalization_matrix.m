@@ -18,27 +18,18 @@ function [norm_mat] = get_normalization_matrix(data);
 am_cams = size(data,1)/3;  
 am_points = size(data,2);   
 
-
-%------------------------------
-%
-% FILL IN THIS PART
-%
-%------------------------------
-
 for hi1 = 1:am_cams
     d = data(hi1*3-2:hi1*3,:);
     d = reshape(d(~isnan(d)),3,[]);
     centroid = mean(d,2);
     n = size(d,2);
-    distance = norm(d-repmat(centroid,[1,n]))/n;
-    norm_mat(hi1*3-2:hi1*3,:) = [sqrt(2)./distance,                0,-sqrt(2)*centroid(1)/distance; ...
-                                                 0,sqrt(2)./distance,-sqrt(2)*centroid(2)/distance; ...
-                                                 0,                0,                            1];
+    distance = sum(sqrt(sum((d-repmat(centroid,[1,n])).^2)))/n; %NOTE should have been sum(norm(d-repmat(centroid))), but norm is retarded in matlab
+    norm_mat(hi1*3-2:hi1*3, :) = [sqrt(2)./distance,                0,-sqrt(2)*centroid(1)/distance; ...
+                                                  0,sqrt(2)./distance,-sqrt(2)*centroid(2)/distance; ...
+                                                  0,                0,                            1];
 end
-
 % as a first test
-
-if true 
+if false
     for hi1 = 1:am_cams
       norm_mat(hi1*3-2:hi1*3,:) = eye(3);
     end
