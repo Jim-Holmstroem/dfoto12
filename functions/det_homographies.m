@@ -11,12 +11,6 @@
 %
 
 function H = det_homographies(points1, points2)
-
-%------------------------------
-%
-% FILL IN THIS PART
-%
-%------------------------------
             
     %NOTE points2 is the one with nans
     isnotnan = ~isnan(points2);
