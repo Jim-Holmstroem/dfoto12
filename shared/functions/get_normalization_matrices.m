@@ -30,6 +30,7 @@ for j = 1:am_cams
         0 s2/d(j) -s2*c(2,j)/d(j);...
         0 0 1]];
 end
+
 end
 
 

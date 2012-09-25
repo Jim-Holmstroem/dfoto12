@@ -22,6 +22,7 @@ data = [p1; p2];
 norm_mat = get_normalization_matrices(data);
 p1 = norm_mat(1:3,:) * data(1:3,:);
 p2 = norm_mat(4:6,:) * data(4:6,:);
+
 noOfPoints = size(p1,2);
 Y = zeros(9,noOfPoints);
 for i=1:noOfPoints
@@ -29,9 +30,10 @@ for i=1:noOfPoints
         p2(2,i)*p1(2,i), p2(2,i), p1(1,i), p1(2,i), 1]';
     Y(:,i) = y;
 end
-
+Y'
 %Now we have e'Y = 0, which we can solve with SVD of Y
 [~, S, V] = svd(Y*Y');
+
 EV = diag(sqrt(S)); %|Eigenvalues| is sqrt of singular values of Y
 [~, index] = min(abs(EV)); %Determines smallest eigenvalue
 e = V(:,index);
