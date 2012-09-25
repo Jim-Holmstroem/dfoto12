@@ -19,9 +19,4 @@
 %
 
 function [cams, cam_centers] = det_stereo_cameras(E, K1, K2, data)
-
-%------------------------------
-%
-% FILL IN THIS PART
-%
-%------------------------------
+    

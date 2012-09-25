@@ -19,7 +19,7 @@ function E = det_E_matrix(pa, pb, Ka, Kb)
 
     pcam_a = Ka\pa; %inv(K1)*points1
     pcam_b = Kb\pb;
-    norm = get_normalization_matrix([pcam_a;pcam_b;])
+    norm = get_normalization_matrix([pcam_a;pcam_b;]);
     
     na = norm(1:3,:);
     nb = norm(4:6,:);
@@ -27,12 +27,13 @@ function E = det_E_matrix(pa, pb, Ka, Kb)
     pcam_b = nb*pcam_b;
 
     xa = pcam_a(1, :);
-    xb = pcam_b(2, :);
-    ya = pcam_a(1, :);
+    ya = pcam_a(2, :);
+    xb = pcam_b(1, :);
     yb = pcam_b(2, :);
-    
+     
     W = [xb.*xa; xb.*ya; xb; yb.*xa; yb.*ya; yb; xa; ya; ones(size(xa))]';
     [~, S, V] = svd(W);
+    
     E = nb'*reshape(V(:,end),3,3)'*na; %the last is always the smallest (help svd)
     [U, S, V] = svd(E);
     m = mean([S(1,1), S(2,2)]);
