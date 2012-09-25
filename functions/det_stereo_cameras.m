@@ -19,4 +19,28 @@
 %
 
 function [cams, cam_centers] = det_stereo_cameras(E, K1, K2, data)
+    cam_centers(:,1) = [0,0,0,1]';
+    cams(1:3,:) = K1*[eye(3),[0,0,0]'];
+    [U,S,V] = svd(E);
+    t = V(:,3);
+    t = t/norm(t); %||t||=1
     
+    cam_centers(:,2) = [t; 1]; % [X0,Y0,Z0,1]
+    W = [0,-1,0;1,0,0;0,0,1];
+    R1 = U*W*V';
+    R2 = U*W'*V';
+
+    R1 = det(R1)*R1;
+    R2 = det(R2)*R2;
+
+    cam1 = K2*R1*[eye(3),t];
+    P1 = det_model(cams, data(:,1)); %check where the first point ends up
+    cam2 = K2*R1*[eye(3),-t];
+    P2 = det_model(cams, data(:,1)); %check where the first point ends up
+    cam3 = K2*R2*[eye(3),t];
+    P3 = det_model(cams, data(:,1)); %check where the first point ends up
+    cam4 = K2*R2*[eye(3),-t];
+    P4 = det_model(cams, data(:,1)); %check where the first point ends up
+
+    
+
