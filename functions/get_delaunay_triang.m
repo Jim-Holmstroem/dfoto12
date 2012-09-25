@@ -12,8 +12,3 @@
  
 function [triang] = get_delaunay_triang(data, num_ref)
 
-%------------------------------
-%
-% FILL IN THIS PART
-%
-%------------------------------
