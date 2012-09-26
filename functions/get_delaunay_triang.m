@@ -11,4 +11,4 @@
 %
  
 function [triang] = get_delaunay_triang(data, num_ref)
-
+    triang = delaunay(data(3*num_ref-2,:), data(3*num_ref-1,:));
