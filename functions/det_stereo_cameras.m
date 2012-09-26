@@ -19,8 +19,9 @@
 %
 
 function [cams, cam_centers] = det_stereo_cameras(E, K1, K2, data)
+    I34 = [eye(3),zeros(3,1)];
     cam_centers(:,1) = [0,0,0,1]';
-    cams(1:3,:) = K1*[eye(3),[0,0,0]'];
+    cams(1:3,:) = K1*I34;
     [U,S,V] = svd(E);
     t = V(:,3);
     t = t/norm(t); %||t||=1
@@ -33,14 +34,39 @@ function [cams, cam_centers] = det_stereo_cameras(E, K1, K2, data)
     R1 = det(R1)*R1;
     R2 = det(R2)*R2;
 
-    cam1 = K2*R1*[eye(3),t];
+    cams(4:6,:) = K2*R1*[eye(3),t];
     P1 = det_model(cams, data(:,1)); %check where the first point ends up
-    cam2 = K2*R1*[eye(3),-t];
-    P2 = det_model(cams, data(:,1)); %check where the first point ends up
-    cam3 = K2*R2*[eye(3),t];
-    P3 = det_model(cams, data(:,1)); %check where the first point ends up
-    cam4 = K2*R2*[eye(3),-t];
-    P4 = det_model(cams, data(:,1)); %check where the first point ends up
+    P1 = P1/P1(end); 
+    P1_cam1 = I34*P1; %NOTE isn't this data ? M*P
+    P1_cam2 = R1*[eye(3),t]*P1; %NOTE not the inner K, why?
+    if( P1_cam1(end)>0 && P1_cam2(end)>0 ) %NOTE both in front of camera?
+        return 
+    end
 
-    
+    cams(4:6,:) = K2*R1*[eye(3),-t];
+    P2 = det_model(cams, data(:,1)); %check where the first point ends up
+    P2 = P2/P2(end); 
+    P2_cam1 = I34*P2;
+    P2_cam2 = R1*[eye(3),-t]*P2;
+    if( P2_cam1(end)>0 && P2_cam2(end)>0 ) 
+        return 
+    end
+
+    cams(4:6,:)= K2*R2*[eye(3),t];
+    P3 = det_model(cams, data(:,1)); %check where the first point ends up
+    P3 = P3/P3(end); 
+    P3_cam1 = I34*P3;
+    P3_cam2 = R2*[eye(3),t]*P3;
+    if( P3_cam1(end)>0 && P3_cam2(end)>0 ) 
+        return 
+    end
+
+    cams(4:6,:) = K2*R2*[eye(3),-t];
+    P4 = det_model(cams, data(:,1)); %check where the first point ends up
+    P4 = P4/P4(end); 
+    P4_cam1 = I34*P4;
+    P4_cam2 = R2*[eye(3),-t]*P4;
+    if( P4_cam1(end)>0 && P4_cam2(end)>0 ) 
+        return 
+    end
 
