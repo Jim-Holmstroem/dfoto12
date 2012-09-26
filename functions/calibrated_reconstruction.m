@@ -82,7 +82,7 @@ E = det_E_matrix(data(1:3,:), data(4:6,:), K1, K2);
 
 % obtain the complete model by triangulation
 % first normalize the model and the cameras 
-[norm_mat] = get_normalization_matrices(data);
+[norm_mat] = get_normalization_matrix(data);
 data_norm(1:3,:) = norm_mat(1:3,:) * data(1:3,:);
 data_norm(4:6,:) = norm_mat(4:6,:) * data(4:6,:);
 cams_norm(1:3,:) = norm_mat(1:3,:) * cams(1:3,:);
